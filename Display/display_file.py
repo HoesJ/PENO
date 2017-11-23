@@ -6,7 +6,7 @@ nb_surfaces = len(input_list)
 
 print("aantal_vlakken:",nb_surfaces)
 
-movement_speed = 10
+movement_speed = .2
 
 forward_button = 'w'
 backward_button = 's'
@@ -17,8 +17,8 @@ fly_down_button = 'c'
 stop_key = 'q'
 
 start_x = 0
-start_y = 20
-start_z = 30
+start_y = 0
+start_z = 0
 
 fps = Spectator()
 fps.simple_camera_pose(start_x,start_y,start_z)

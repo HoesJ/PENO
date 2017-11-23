@@ -1,8 +1,8 @@
 import sys
-import multiprocessing
+from math import floor
 
-FILEPATH = "None"
-MTLPATH = "None"
+FILEPATH = "mesh.obj"
+MTLPATH = "mesh.mtl"
 FILETYPE = "None"
 FACTOR = 1
 
@@ -51,7 +51,11 @@ def Translate(input, vertices, faces, current_absorption):
             line = mtl.readline()
         mtl.close()
         R,G,B = line[2:].split()
-        return (1-float(R), 1-float(G), 1-float(B))
+
+        absorb_R = 1-float(R)
+        absorb_G = 1-float(G)
+        absorb_B = 1-float(B)
+        return (absorb_R, absorb_G,absorb_B)
 
     elif (input[0:2] == "v "):
         x, y, z = str.split(input[2:])

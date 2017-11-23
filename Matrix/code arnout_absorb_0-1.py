@@ -3,53 +3,88 @@ from scipy.linalg import lu_factor, lu_solve
 import ReadObj
 from random import randint
 
-rho_multiplication_factor = 1
-nb_light_sources = 30
-light_source_intensity = 0.9
+light_source_intensity = [0.9,0.9,0.9]
+random_colors = True
 
+def random_absorb(RGB_start, RGB_end, RGB_val,length):
+    R_start =RGB_start[0]
+    G_start =RGB_start[1]
+    B_start =RGB_start[2]
 
-def solve_intensity_matrix(rho_multiplication_factor, nb_light_sources, light_source_intensity, surfaces):
+    R_end =RGB_end[0]
+    G_end =RGB_end[1]
+    B_end =RGB_end[2]
+
+    R_val = 1-RGB_val[0]
+    G_val = 1-RGB_val[1]
+    B_val = 1-RGB_val[2]
+
+    R = [None for i in range(length)]
+    G = [None for i in range(length)]
+    B = [None for i in range(length)]
+
+    for i in range(length):
+        if i >= R_start and i < R_end:
+            R[i] = R_val
+        else:
+            R[i] = 1
+        if i >= G_start and i < G_end:
+            G[i] = G_val
+        else:
+            G[i] = 1
+        if i >= B_start and i < B_end:
+            B[i] = B_val
+        else:
+            B[i] = 1
+
+    # R[R_start:R_end] = (R_end - R_start)*[R_val]
+    # G[G_start:G_end] = (G_end - G_start)*[G_val]
+    # B[B_start:B_end] = (B_end - B_start)*[B_val]
+
+    return [R,G,B]
+
+def solve_intensity_matrix(light_source_intensity,random_colors):
     # ReadObj.SetFile(name='mesh_MainProcess.obj', colors='mesh_MainProcess.mtl')
+    surfaces = []
     A_rho_RGB = ReadObj.GetAbsorb()
-    A_rho_R, A_rho_G, A_rho_B = [R * rho_multiplication_factor for (R, G, B) in A_rho_RGB], \
-                                [G * rho_multiplication_factor for (R, G, B) in A_rho_RGB], \
-                                [B * rho_multiplication_factor for (R, G, B) in A_rho_RGB]
-    # print('A_rho_R : ', A_rho_R)
-    # print('A_rho_G : ', A_rho_G)
-    # print('A_rho_B : ', A_rho_B)
-
+    A_rho_R, A_rho_G, A_rho_B = [R  for (R, G, B) in A_rho_RGB], \
+                                [G  for (R, G, B) in A_rho_RGB], \
+                                [B  for (R, G, B) in A_rho_RGB]
     N = len(A_rho_R)
-
     for i in range(N):
         if A_rho_R[i] == 0 and A_rho_G[i] == 0 and A_rho_B[i] == 0:
             surfaces.append(i)
+    print("lichtbronnen:",surfaces)
 
-    # A_rho_R, A_rho_G, A_rho_B = [0.1 for i in range(N)], [0.1 for i in range(N)], [0.1 for i in range(N)]
-    # A_rho_R[:150], A_rho_G[150:300], A_rho_B[300:N] = [0.5] * 150, [0.5] * 150, [0.5] * (N-300)
+    if random_colors is True:
+        RGB_start = [0,0,0]
+        RGB_end = [N,N,N]
+        RGB_val = [0.3,0.3,0.3]
+        length = N
+        rhos = random_absorb(RGB_start, RGB_end, RGB_val,length)
+        A_rho_R = rhos[0]
+        A_rho_G = rhos[1]
+        A_rho_B = rhos[2]
 
-    # print('A_rho_R : ', A_rho_R)
-    # print('A_rho_G : ', A_rho_G)
-    # print('A_rho_B : ', A_rho_B)
+    print('A_rho_R : ', A_rho_R)
+    print('A_rho_G : ', A_rho_G)
+    print('A_rho_B : ', A_rho_B)
 
-    # print('N : ', N)
     A_F = [[0 for i in range(N)] for j in range(N)]
 
-    file = open('viewmatrixMulti.txt', 'r')
+    file = open('viewmatrix.txt', 'r')
     for line in file:
         if (line[0] == "#"):
             continue
         i, j, F_i_j = line.strip().split(' ')
         i, j, F_i_j = int(i), int(j), float(F_i_j)
         A_F[i][j] = F_i_j
-        # print('i : ', i, 'j : ', j, 'F_i_j : ', F_i_j)
 
     A_R, A_G, A_B = [[None for i in range(N)] for j in range(N)], \
                     [[None for i in range(N)] for j in range(N)], \
                     [[None for i in range(N)] for j in range(N)]
-    # print('A_R :  ', A_R)
     for i in range(N):
         for j in range(N):
-            # print(i, j)
             if i != j:
                 A_R[i][j], A_G[i][j], A_B[i][j] = - A_F[i][j] * A_rho_R[i], \
                                                   - A_F[i][j] * A_rho_G[i], \
@@ -59,9 +94,7 @@ def solve_intensity_matrix(rho_multiplication_factor, nb_light_sources, light_so
                                                   1 - A_F[i][j] * A_rho_G[i], \
                                                   1 - A_F[i][j] * A_rho_B[i]
 
-    # print('A_R : ', A_R)
-    # print('A_G : ', A_G)
-    # print('A_B : ', A_B)
+
     bR = [0 for i in range(N)]
     for elem in surfaces:
         bR[elem] = light_source_intensity[0]
@@ -75,24 +108,15 @@ def solve_intensity_matrix(rho_multiplication_factor, nb_light_sources, light_so
     LU_R, piv_R = lu_factor(A_R)
     LU_G, piv_G = lu_factor(A_G)
     LU_B, piv_B = lu_factor(A_B)
-    # print('LU_R : ', LU_R)
-    # print('LU_R : ', LU_R)
-    # print('LU_G : ', LU_G)
+
 
     solution_R, solution_G, solution_B = lu_solve((LU_R, piv_R), bR), \
                                          lu_solve((LU_G, piv_G), bG), \
                                          lu_solve((LU_B, piv_B), bB)
-    # print('solution_R : ', solution_R)
-    # print('solution_G : ', solution_G)
-    # print('solution_B : ', solution_B)
-
     file = open('colors.txt', 'w+')
     for i in range(len(solution_R)):
         string = "{0} {1} {2}".format(solution_R[i], solution_G[i], solution_B[i])
         file.write(string + "\n")
 
-
-solve_intensity_matrix(rho_multiplication_factor=1,
-                       nb_light_sources=3,
-                       light_source_intensity=[0.5,0.5,0.5],
-                       surfaces=[1,2,3,4,5,6,7,8,9])
+ReadObj.GetAllInfo()
+solve_intensity_matrix(light_source_intensity,random_colors)

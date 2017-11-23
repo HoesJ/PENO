@@ -6,8 +6,12 @@ assen_omgedraaid = True
 factor = 100
 
 random_colors = False
-colors_txt = True
+colors_txt = False
 colors_mtl = False
+test_colors = True
+test_color = 500
+
+
 def assenstelsel_wijzigen(input):
     """
     Autocad assen omzetten naar openGL assen
@@ -34,6 +38,8 @@ def get_random_colors(n):
     return colors
 
 input_list = ReadObj.GetAllFaces()
+N = len(input_list)
+
 if assen_omgedraaid:
     input_list = assenstelsel_wijzigen(input_list)
 
@@ -49,10 +55,31 @@ elif colors_mtl:
     absorb = ReadObj.GetAbsorb()
     colors = []
     for surface_color in absorb:
-        absorb_R = surface_color[0]
-        absorb_G = surface_color[1]
-        absorb_B = surface_color[2]
+        absorb_R = 1-surface_color[0]
+        absorb_G = 1-surface_color[1]
+        absorb_B = 1-surface_color[2]
         # print("absorb:",(absorb_x,absorb_y,absorb_z))
         RGB = [1-absorb_R,1-absorb_G,1-absorb_B]
         colors.append(RGB)
+elif test_colors:
+    A_F = [[0 for i in range(N)] for j in range(N)]
+    file = open('viewmatrixMulti_15.txt', 'r')
+    for line in file:
+        if (line[0] == "#"):
+            continue
+        i, j, F_i_j = line.strip().split(' ')
+        i, j, F_i_j = int(i), int(j), float(F_i_j)
+        A_F[i][j] = F_i_j
+
+    colors = [[0.5,0,0] for i in range(N)]
+    colors[test_color] = [1,1,1]
+
+    for i in range(N):
+        if (i != test_color and A_F[test_color][i] != 0):
+            colors[i] = (0,0.5,0)
+
+    print(colors[test_color])
+
+
+
 
