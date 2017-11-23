@@ -34,8 +34,10 @@ def solve_intensity_matrix(rho_multiplication_factor, nb_light_sources, light_so
     # print('N : ', N)
     A_F = [[0 for i in range(N)] for j in range(N)]
 
-    file = open('viewmatrix.txt', 'r')
+    file = open('viewmatrixMulti.txt', 'r')
     for line in file:
+        if (line[0] == "#"):
+            continue
         i, j, F_i_j = line.strip().split(' ')
         i, j, F_i_j = int(i), int(j), float(F_i_j)
         A_F[i][j] = F_i_j
