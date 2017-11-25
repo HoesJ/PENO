@@ -132,13 +132,13 @@ def MeshAll(faces, absorptions, triangulation_function):
     print("Factor: ", len(tri_faces) / tot)
     return (tri_faces, tri_absorptions)
 
-def ExportMesh(faces, absorptions, triangulation_function):
+def ExportMesh(faces, absorptions, triangulation_function, filename="mesh"):
     """
         Exports the created mesh to a file called "mesh.obj"
     """
     tri, absorb = MeshAll(faces, absorptions, triangulation_function)
 
-    name = "mesh.{0}"
+    name = "{0}.{1}".format(filename, "{0}")
 
     file = open(name.format("obj"), "w+")
     mtl = open(name.format("mtl"), "w+")
@@ -149,13 +149,6 @@ def ExportMesh(faces, absorptions, triangulation_function):
 
     for i in range(len(tri)):
         face = tri[i]
-
-        # Check if face is not empty
-        p1, p2, p3 = face
-        dir1 = numpy.array([p3[0]-p1[0], p3[1]-p1[1], p3[2]-p1[2]])
-        dir2 = numpy.array([p2[0]-p1[0], p2[1]-p1[1], p2[2]-p1[2]])
-        if (abs(numpy.cross(dir1, dir2).sum()) < 0.0000001):
-            continue
 
         if (prev_absorb == None or prev_absorb != absorb[i]):
             # Write usemtl line

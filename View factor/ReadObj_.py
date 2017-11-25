@@ -1,7 +1,8 @@
 import sys
 import multiprocessing
+import numpy
 
-FILEPATH = "mesh.obj"
+FILEPATH = "None"
 MTLPATH = "None"
 FILETYPE = "None"
 FACTOR = 1
@@ -98,6 +99,15 @@ def CleanFaces():
             del FACES[i]
             del ABSORB[i]
             continue
+
+        p1, p2, p3 = FACES[i]
+        dir1 = numpy.array([p3[0]-p1[0], p3[1]-p1[1], p3[2]-p1[2]])
+        dir2 = numpy.array([p2[0]-p1[0], p2[1]-p1[1], p2[2]-p1[2]])
+        if (abs(numpy.cross(dir1, dir2).sum()) < 0.0000001):
+            del FACES[i]
+            del ABSORB[i]
+            continue
+
         i += 1
 
 

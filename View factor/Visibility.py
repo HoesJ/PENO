@@ -71,7 +71,7 @@ def is_visible(surfaces, x, y, source=None, target=None):
             n3 = (u2 - u1) * (v3 - v1) - (v2 - v1) * (u3 - u1)
             dT = (u1 - x1) * n1 + (v1 - y1) * n2 + (w1 - z1) * n3
             dN = (x2 - x1) * n1 + (y2 - y1) * n2 + (z2 - z1) * n3
-            if dN != 0 :
+            if dN != 0:
                 d = dT / dN
                 Point = [d * (x2 - x1) + x1, d * (y2 - y1) + y1, d * (z2 - z1) + z1]
                 if isBetween(Point, [x, y]) and isInSurface(Point, surface):

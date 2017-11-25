@@ -9,7 +9,7 @@ import time
 
 
 class Spectator:
-    def __init__(self, w=1540, h=800, fov=75):
+    def __init__(self, w=1800, h=1000, fov=100):
         pygame.init()
         pygame.display.set_mode((w, h), pygame.OPENGL | pygame.DOUBLEBUF)
         glEnable(GL_DEPTH_TEST)

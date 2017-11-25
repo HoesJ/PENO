@@ -50,7 +50,7 @@ def view_factor(surfaces, p1, p2, p3, q1, q2, q3, N):  # FROM P TO Q
         cos_angle_p = VectorCalc.cos_angle_between(line, normal_p)
         cos_angle_q = VectorCalc.cos_angle_between(line, normal_q)
 
-        integrand += abs(cos_angle_p * cos_angle_q / (math.pow(r,2) * math.pi))
+        integrand = abs(cos_angle_p * cos_angle_q / (math.pow(r,2) * math.pi))
     return (integrand * surface_q) / N
 
 def run_everything_from_P_to_Q(index_polygon_Q, sequence, N):  # FROM P TO Q
@@ -85,8 +85,8 @@ def run_everything(all_faces, start, end, N, sender=None):
     else:
         sender.send(everything)
 
-def Export(result, time=None):
-    file = open("viewmatrixMulti.txt", "w+")
+def Export(result, time=None, name="viewmatrix.txt"):
+    file = open(name, "w+")
 
     if (time != None):
         file.write("# Processing time: {0}\n".format(time))

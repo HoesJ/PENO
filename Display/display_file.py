@@ -2,23 +2,23 @@ from surfaces_with_colors import *
 from draw_function import *
 from spectator_class import *
 import time
-nb_surfaces = len(input_list)
+nb_surfaces= len(input_list)
 
 print("aantal_vlakken:",nb_surfaces)
 
-movement_speed = .2
+movement_speed = 5
 
-forward_button = 'w'
+forward_button = 'z'
 backward_button = 's'
-left_strafe_button = 'a'
+left_strafe_button = 'q'
 right_strafe_button = 'd'
 fly_up_button = 'f'
 fly_down_button = 'c'
-stop_key = 'q'
+stop_key = 'm'
 
-start_x = 0
-start_y = 0
-start_z = 0
+start_x = 10
+start_y = 10
+start_z = 10
 
 fps = Spectator()
 fps.simple_camera_pose(start_x,start_y,start_z)
