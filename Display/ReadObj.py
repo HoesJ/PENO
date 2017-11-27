@@ -51,7 +51,7 @@ def Translate(input, vertices, faces, current_absorption):
             line = mtl.readline()
         mtl.close()
         R,G,B = line[2:].split()
-        return (float(R), float(G), float(B))
+        return (1-float(R), 1-float(G), 1-float(B))
 
     elif (input[0:2] == "v "):
         x, y, z = str.split(input[2:])
