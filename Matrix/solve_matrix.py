@@ -54,7 +54,7 @@ def solve_intensity_matrix(light_source_intensity,random_colors):
                                 [B  for (R, G, B) in A_rho_RGB]
     N = len(A_rho_R)
     for i in range(N):
-        if A_rho_R[i] == 0 and A_rho_G[i] == 0 and A_rho_B[i] == 0:# and i > 171:
+        if A_rho_R[i] == 1 and A_rho_G[i] == 1 and A_rho_B[i] == 1:# and i > 171:
             surfaces.append(i)
 
     if random_colors is True:
