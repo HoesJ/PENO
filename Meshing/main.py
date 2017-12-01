@@ -4,13 +4,13 @@ import Triangulation
 import ShowMesh
 
 # Set ReadObj constants
-file_name = "0_Bungalow.obj"
-mtl_name = "0_Bungalow.mtl"
-factor = 0.0005
+file_name = "0_GaragaAutocad.obj"
+mtl_name = "0_GaragaAutocad.mtl"
+factor = 5
 ReadObj.SetFile(file_name, mtl_name, factor)
 
 # Set Triangulation constants
-max_area = 250
+max_area = 20
 min_edge_step = 50
 in_face_step = 50
 in_face_density = 1000
@@ -31,4 +31,4 @@ if not export:
     if (show):
         ShowMesh.Show(result[0])
 else:
-    Meshing.ExportMesh(ReadObj.GetAllFaces(), ReadObj.GetAbsorb(), method, filename="mesh_bungalow")
+    Meshing.ExportMesh(ReadObj.GetAllFaces(), ReadObj.GetAbsorb(), method, filename="mesh_test")

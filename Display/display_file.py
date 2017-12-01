@@ -6,7 +6,7 @@ nb_surfaces= len(input_list)
 
 print("aantal_vlakken:",nb_surfaces)
 
-movement_speed = 5
+movement_speed = 0.5
 
 forward_button = 'z'
 backward_button = 's'

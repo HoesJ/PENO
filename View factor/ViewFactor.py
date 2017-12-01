@@ -85,7 +85,7 @@ def run_everything(all_faces, start, end, N, sender=None):
     else:
         sender.send(everything)
 
-def Export(result, time=None, name="viewmatrix.txt"):
+def Export(result, start, time=None, name="viewmatrix.txt"):
     file = open(name, "w+")
 
     if (time != None):
@@ -93,5 +93,5 @@ def Export(result, time=None, name="viewmatrix.txt"):
     
     for row in range(len(result)):
         for col in range(len(result[0])):
-            line = "{0} {1} {2}".format(row, col, result[row][col])
+            line = "{0} {1} {2}".format(row+start, col+start, result[row][col])
             file.write(line + "\n")

@@ -21,7 +21,6 @@ def print_starting(length, N, num_processes):
 def run(all_faces, N, num_processes, start=0, end=None):
     if (end == None):
         end = len(all_faces)
-    print_starting(end-start, N, num_processes)
 
     start_time = time.perf_counter()
     
@@ -31,8 +30,8 @@ def run(all_faces, N, num_processes, start=0, end=None):
     step = int(to_do/num_processes)
 
     for i in range(num_processes):
-        start_index = i * step
-        end_index = (i+1) * step if i < num_processes-1 else to_do
+        start_index = start + i * step
+        end_index = start + (i+1) * step if i < num_processes-1 else end
 
         recieving, sending = multiprocessing.Pipe(False)
         p = multiprocessing.Process(target=ViewFactor.run_everything, args=(all_faces, start_index, end_index, N, sending))
@@ -50,10 +49,10 @@ def run(all_faces, N, num_processes, start=0, end=None):
     for p in processes:
         p.join()
 
-    ViewFactor.Export(result, time=time.perf_counter()-start_time)
+    ViewFactor.Export(result, start, time=time.perf_counter()-start_time)
 
 
 if __name__ == "__main__":
-    ReadObj_.SetFile("mesh_bungalow.obj")
+    ReadObj_.SetFile("mesh_test.obj")
     ReadObj_.GetAllInfo()
-    run(ReadObj_.GetAllFaces(), 3, 2)
+    run(ReadObj_.GetAllFaces(), 5, 2)

@@ -8,7 +8,7 @@ def draw(surfaces,colors, start, end):
         surface = surfaces[i]
         for vertex in surface:
             # glColor3fv(colors[x])  # RGB constante van 0 tot 1
-            glColor3fv(colors[i])  # RGB constante van 0 tot 1
+            glColor3fv(colors[i])
             glVertex3fv(vertex)
         # x += 1
     glEnd()

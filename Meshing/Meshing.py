@@ -108,6 +108,12 @@ def MeshAll(faces, absorptions, triangulation_function):
         progress = i / tot
         WriteProgress(progress)
 
+        # Check by color if the face needs to be meshed
+        if (absorptions[i] == (1.0,1.0,1.0) or absorptions[i] == (0.0, 0.0, 0.0)):
+            tri_faces.extend([faces[i]])
+            tri_absorptions.extend([absorptions[i]])
+            continue
+
         # Transform the face to 2D and store the used variables
         rot1, rot2, z_value = TransformTo2D(faces[i])
 

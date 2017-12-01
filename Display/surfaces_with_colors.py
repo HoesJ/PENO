@@ -1,15 +1,15 @@
 import ReadObj
 from random import *
 
-ReadObj.SetFile("mesh_bungalow.obj", "mesh_bungalow.mtl")
+ReadObj.SetFile("mesh_test.obj", "mesh_test.mtl")
 ReadObj.GetAllInfo()
 
 assen_omgedraaid = True
 factor = 1
 
 random_colors = False
-colors_txt = False
-colors_mtl = True
+colors_txt = True
+colors_mtl = False
 test_colors = False
 test_color = 100
 
