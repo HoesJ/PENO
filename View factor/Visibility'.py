@@ -11,6 +11,7 @@ def scal_prod(v1, v2):
 def isBetween(p, line):
     same = True
     i = 0
+	# if the value of the points on dimesion i are the same, chose the next dimension.
     while same:
         if line[0][i] == line[1][i]:
             i += 1
@@ -20,10 +21,12 @@ def isBetween(p, line):
     l2 = min(line[0][i], line[1][i])
     return (p[i] < l1 and p[i] > l2)
 
+# check if the ij projection of the given surface is two dimensional, and not just a line.
 def inSamePlane(a, b, c, i, j):
     coefT = (b[j] - a[j])
     coefN = (b[i] - a[i])
     if coefN == 0:
+		# if both are 0, the projections of the points a and b on the ij plane are the same.
         if coefT == 0:
             return True
         i, j = j, i
@@ -31,10 +34,12 @@ def inSamePlane(a, b, c, i, j):
     else:
         coef = coefT / coefN
     cte = a[j] - coef * a[i]
+	# check if the projection of point c is between the projections of a and b
     return c[j] == coef * c[i] + cte
 
-# Given point and surface are in the same plate.
+# Check if the given point, which should be on the same plane as the given surface, is inside the borders of the surface using Ray casting algorithm.
 def isInSurface(p, surface):
+	# Search for the plane where the projection of the surface is not a line.
     if not inSamePlane(surface[0], surface[1], surface[2], 0, 1):
         m, n = 0, 1
     elif not inSamePlane(surface[0], surface[1], surface[2], 0, 2):
@@ -70,19 +75,27 @@ def is_visible(surfaces, source_point, target_point, source=None, target=None, l
     # check visibility
     for surface in surfaces:
         if surface != source and surface != target:
+			# xyz coordinates of random points.
             x1, y1, z1 = source_point[0], source_point[1], source_point[2]
             x2, y2, z2 = target_point[0], target_point[1], target_point[2]
+			# xyz coordinates of vertex of surface
             u1, v1, w1 = surface[0][0], surface[0][1], surface[0][2]
             u2, v2, w2 = surface[1][0], surface[1][1], surface[1][2]
             u3, v3, w3 = surface[2][0], surface[2][1], surface[2][2]
+			# calculate normalvector of surface
             n1 = (v2 - v1) * (w3 - w1) - (w2 - w1) * (v3 - v1)
             n2 = (w2 - w1) * (u3 - u1) - (u2 - u1) * (w3 - w1)
             n3 = (u2 - u1) * (v3 - v1) - (v2 - v1) * (u3 - u1)
+			# "Teller" and "Noemer" of variable d, part of the equation of the line between source_point and target_point.
             dT = (u1 - x1) * n1 + (v1 - y1) * n2 + (w1 - z1) * n3
             dN = (x2 - x1) * n1 + (y2 - y1) * n2 + (z2 - z1) * n3
+			# If dN == 0: line is parallel to surface. If dT == dN == 0: Line is inside surface.
+			# Else: d is real, filling in the equation of the line gives its intersection with the plane of the surface.
             if dN != 0:
                 d = dT / dN
                 Point = [d * (x2 - x1) + x1, d * (y2 - y1) + y1, d * (z2 - z1) + z1]
+				# Surface is between the two points, if the found intersection point is between source_point and target_point, 
+				# and is inside of the borders of the surface.
                 if isBetween(Point, [source_point, target_point]) and isInSurface(Point, surface):
                     return 0
             elif dT == 0:
